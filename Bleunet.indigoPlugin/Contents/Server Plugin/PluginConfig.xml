@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<PluginConfig>
+	<SupportURL>http://wiki.indigodomo.com/doku.php?id=plugins:sql_logger</SupportURL>
+	<Field type="serialport" id="devicePortFieldId" />
+</PluginConfig>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<Devices>
+	<!-- This custom device illustrates how a plugin can update custom device
+	states which can be used in Device State Changed triggers, conditionals,
+	and inspected on Control Pages. The python runConcurrentThread() method
+	will update the states every second.
+	-->
+	<Device type="custom" id="bleuButtonDevice">
+		<Name>Bleu Button</Name>
+		<ConfigUI>
+			<Field id="NodeID" type="textfield" hidden="no">
+				<Label>NodeID:</Label>
+			</Field>
+		</ConfigUI>
+	
+	<States>
+    <State id="buttonOnePressed">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button One Pressed</TriggerLabel>
+        <ControlPageLabel>Button One Pressed</ControlPageLabel>
+    </State>
+        <State id="buttonTwoPressed">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Two Pressed</TriggerLabel>
+        <ControlPageLabel>Button Two Pressed</ControlPageLabel>
+    </State>
+    <State id="buttonThreePressed">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Three Pressed</TriggerLabel>
+        <ControlPageLabel>Button Three Pressed</ControlPageLabel>
+    </State>
+    <State id="buttonFourPressed">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Four Pressed</TriggerLabel>
+        <ControlPageLabel>Button Four Pressed</ControlPageLabel>
+    </State>
+	<State id="buttonOneLongPress">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button One Long Pressed</TriggerLabel>
+        <ControlPageLabel>Button One Long Pressed</ControlPageLabel>
+    </State>
+	<State id="buttonTwoLongPress">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Two Long Pressed</TriggerLabel>
+        <ControlPageLabel>Button Two Long Pressed</ControlPageLabel>
+    </State>
+	<State id="buttonThreeLongPress">
+	    <ValueType boinolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Three Long Pressed</TriggerLabel>
+        <ControlPageLabel>Button Three Long Pressed</ControlPageLabel>
+    </State>
+    <State id="buttonFourLongPress">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button Four Long Pressed</TriggerLabel>
+        <ControlPageLabel>Button Four Long Pressed</ControlPageLabel>
+    </State>
+</States>
+</Device>
+</Devices>
