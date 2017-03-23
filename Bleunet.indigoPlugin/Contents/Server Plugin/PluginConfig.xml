@@ -2,4 +2,9 @@
 <PluginConfig>
 	<SupportURL>http://wiki.indigodomo.com/doku.php?id=plugins:sql_logger</SupportURL>
 	<Field type="serialport" id="devicePortFieldId" />
+  
+  <Field type="checkbox" id="debugEnabled" defaultValue="false">
+    <Label>Enable debugging:</Label>
+    <Description>(not recommended)</Description>
+  </Field>
 </PluginConfig>

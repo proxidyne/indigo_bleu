@@ -26,13 +26,14 @@ class Plugin(indigo.PluginBase):
 	########################################
 	def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
 		super(Plugin, self).__init__(pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
-		self.debug = True
+		self.debug = False
 		self.triggers=[]
 		self.last=0
 	def __del__(self):
 		indigo.PluginBase.__del__(self)
 	######################
 	def startup(self):
+		self.loadPluginPrefs()
 		self.debugLog(u"startup called")
 	def shutdown(self):
 		self.debugLog(u"shutdown called")
@@ -52,7 +53,14 @@ class Plugin(indigo.PluginBase):
 			if trigger.id == x.id:
 				self.triggers.remove(x)
 
+	def loadPluginPrefs(self):
+		self.debugLog(u"loadpluginPrefs called")	
+		self.debug = self.pluginPrefs.get('debugEnabled',False)
 
+	def closedPrefsConfigUi ( self, valuesDict, UserCancelled):
+		if UserCancelled is False:
+			indigo.server.log ("Preferences were updated.")
+			self.loadPluginPrefs()
 
 	def runConcurrentThread(self):
 		self.debugLog(self.pluginPrefs)
@@ -118,4 +126,4 @@ class Plugin(indigo.PluginBase):
 # 				self.sleep(3) # in seconds
 		except self.StopThread:
 			# do any cleanup here
-			pass		
+			pass
