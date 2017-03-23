@@ -1,18 +1,33 @@
 <?xml version="1.0"?>
 <Devices>
-	<!-- This custom device illustrates how a plugin can update custom device
-	states which can be used in Device State Changed triggers, conditionals,
-	and inspected on Control Pages. The python runConcurrentThread() method
-	will update the states every second.
-	-->
-	<Device type="custom" id="bleuButtonDevice">
-		<Name>Bleu Button</Name>
+	<Device type="custom" id="singleInputBleuButtonDevice">
+		<Name>Single Input Button</Name>
 		<ConfigUI>
 			<Field id="NodeID" type="textfield" hidden="no">
 				<Label>NodeID:</Label>
 			</Field>
 		</ConfigUI>
 	
+	<States>
+    <State id="buttonOnePressed">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button One Pressed</TriggerLabel>
+        <ControlPageLabel>Button One Pressed</ControlPageLabel>
+    </State>
+	<State id="buttonOneLongPress">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Button One Long Pressed</TriggerLabel>
+        <ControlPageLabel>Button One Long Pressed</ControlPageLabel>
+    </State>
+</States>
+</Device>
+<Device type="custom" id="fourInputBleuButtonDevice">
+		<Name>Four Input Button</Name>
+		<ConfigUI>
+			<Field id="NodeID" type="textfield" hidden="no">
+				<Label>NodeID:</Label>
+			</Field>
+		</ConfigUI>
 	<States>
     <State id="buttonOnePressed">
 	    <ValueType boolType="YesNo">Boolean</ValueType>
@@ -53,6 +68,24 @@
 	    <ValueType boolType="YesNo">Boolean</ValueType>
         <TriggerLabel>Button Four Long Pressed</TriggerLabel>
         <ControlPageLabel>Button Four Long Pressed</ControlPageLabel>
+    </State>
+</States>
+</Device>
+
+
+<Device type="custom" id="motionSensorBleuButtonDevice">
+		<Name>Motion Sensor</Name>
+		<ConfigUI>
+			<Field id="NodeID" type="textfield" hidden="no">
+				<Label>NodeID:</Label>
+			</Field>
+		</ConfigUI>
+	
+	<States>
+    <State id="motionDetected">
+	    <ValueType boolType="YesNo">Boolean</ValueType>
+        <TriggerLabel>Motion Detected</TriggerLabel>
+        <ControlPageLabel>Motion Detected</ControlPageLabel>
     </State>
 </States>
 </Device>
