@@ -89,4 +89,72 @@
     </State>
 </States>
 </Device>
+
+<Device type="custom" id="beaconSensorBleuButtonDevice">
+		<Name>Beacon Detector</Name>
+		<ConfigUI>
+			<Field id="NodeID" type="textfield" hidden="no">
+				<Label>NodeID:</Label>
+			</Field>
+		</ConfigUI>
+	
+	<States>
+    <State id="beaconNumber0">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 0 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 0 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber1">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 1 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 1 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber2">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 2 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 2 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber3">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 3 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 3 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber4">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 4 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 4 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber5">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 5 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 5 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber6">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 6 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 6 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber7">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 7 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 7 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber8">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 8 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 8 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber9">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 9 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 9 is nearby</ControlPageLabel>
+    </State>
+    <State id="beaconNumber10">
+	    <ValueType boolType="TrueFalse">Boolean</ValueType>
+        <TriggerLabel>Beacon 10 is nearby</TriggerLabel>
+        <ControlPageLabel>Beacon 10 is nearby</ControlPageLabel>
+    </State>
+</States>
+</Device>
+
 </Devices>
