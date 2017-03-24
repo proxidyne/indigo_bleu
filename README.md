@@ -1,7 +1,4 @@
-# indigo_bleu
-Indigo home automation software plugin to use Bleunet bluetooth devices.
-
-
+# Indigo Bleu: Indigo home automation software plugin to use Bleunet bluetooth devices.
 
 * ## Supported Devices: 
 * [Proxidyne 4 Up Button](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/survey-button?variant=35408516234)
