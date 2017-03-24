@@ -1,12 +1,22 @@
 # indigo_bleu
 Indigo home automation software plugin to use Bleunet bluetooth devices.
 
+
+
 * ## Supported Devices: 
 * [Proxidyne 4 Up Button](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/survey-button?variant=35408516234)
 * [Proxidyne 1 Up Button](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/single-button-sensor?variant=35411831498)
 * [Proxidyne Compact Four-Button Button with Mounting Bracket](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/proxidyne-compact-four-button-button-with-mounting-bracket?variant=35404503626)
 * [Proxidyne Motion Sensor with Mounting Bracket](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/motion-sensor?variant=35373531914)
 * [Proxidyne Bleunet Receiver](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/bluetooth-receiver?variant=35364208138)
+
+<img src="https://i0.wp.com/s3.amazonaws.com/proxidyne-static/2016/05/16151101/graphic-beacon_LEFT-greenLED_FINALcutout.jpeg"  width="256" align="left">
+<img src="https://i0.wp.com/s3.amazonaws.com/proxidyne-static/2016/12/29095222/single-button-sensor320X240.png"  width="256" align="left">
+<img src="https://i0.wp.com/s3.amazonaws.com/proxidyne-static/2016/05/16151101/graphic-beacon_LEFT-greenLED_FINALcutout.jpeg"  width="256" align="left">
+<img src="https://s3.amazonaws.com/proxidyne-static/2016/08/17092341/survey_button_no_background.jpg"  width="256" align="left">
+<img src="https://i0.wp.com/s3.amazonaws.com/proxidyne-static/2016/12/28204603/motion-sensor320X240.png"  width="256" align="left">
+<img src="https://i1.wp.com/s3.amazonaws.com/proxidyne-static/2017/03/11133303/series100.png"  width="256" >
+
 
 ## Instructions
 * Download and install our Indigo plugin from github.  The plugin needs to be installed in the /Library/Application Support/Perceptive Automation/Indigo 7/Plugins folder:
