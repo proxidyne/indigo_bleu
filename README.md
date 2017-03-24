@@ -9,6 +9,7 @@ Indigo home automation software plugin to use Bleunet bluetooth devices.
 * [Proxidyne Bleunet Receiver](https://store.proxidyne.com/collections/bleunet-sensors-for-home-automation/products/bluetooth-receiver?variant=35364208138)
 The system looks like this:
 ![image](https://i1.wp.com/s3.amazonaws.com/proxidyne-static/2017/03/23163324/beacon-detector2.png)
+
 When someone with a wearable walks into a room with an iBeacon Detector, the iBeacon detector senses it and compares the identifiers being broadcast by the iBeacon to the identifiers the iBeacon detector is listening for.  Specifically, if the UUID and major number of the iBeacon transmission from the wearable match the configured UUID and major number of the iBeacon Detector, a trigger is sent from the iBeacon Detector to the USB Receiver plugged into the Indigo Server.  The Indigo server has our plugin installed, and recognizes this transmission, and triggers an action based on the person entering or existing the proximity to the iBeacon Detector.  The iBeacon Detector has the ability to filter out based on signal strength as well, so only iBeacons that are within a specified distance  will trigger actions.  You have much more granular control for triggering on distance than with an app and an iBeacon.
 1. Download and install our Indigo plugin from github.  The plugin needs to be installed in the /Library/Application Support/Perceptive Automation/Indigo 7/Plugins folder:
 ![image](https://i0.wp.com/s3.amazonaws.com/proxidyne-static/2017/03/23212621/pathtoplugin.png)
