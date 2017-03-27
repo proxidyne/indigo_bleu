@@ -134,7 +134,6 @@ class Plugin(indigo.PluginBase):
 														bitmask = 2 ** beacon_number
 														if (asset_int & bitmask == bitmask):
 															indigo.server.log("beacon {} detected".format(beacon_number))
-
 															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
 														else:
 															self.debugLog("beacon {} not detected".format(beacon_number))
