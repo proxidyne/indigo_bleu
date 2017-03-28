@@ -129,74 +129,15 @@ class Plugin(indigo.PluginBase):
 											if group == 0x00:
 												if self.lastasset != asset: 
 													self.lastasset=asset
-													if (asset[31]=='1'):
-														self.debugLog("beacon 0 detected")
-														y.updateStateOnServer('beaconNumber0', value=True)
-													else:
-														self.debugLog("beacon 0 not detected")		
-														y.updateStateOnServer('beaconNumber0', value=False)
-													if (asset[30]=='1'):
-														y.updateStateOnServer('beaconNumber1', value=True)
-														self.debugLog("beacon 1 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber1', value=False)
-														self.debugLog("beacon 1 not detected")		
-													if (asset[29]=='1'):
-														y.updateStateOnServer('beaconNumber2', value=True)
-														self.debugLog("beacon 2 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber2', value=False)
-														self.debugLog("beacon 2 not detected")		
-													if (asset[28]=='1'):
-														y.updateStateOnServer('beaconNumber3', value=True)
-														self.debugLog("beacon 3 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber3', value=False)
-														self.debugLog("beacon 3 not detected")		
-													if (asset[27]=='1'):
-														y.updateStateOnServer('beaconNumber4', value=True)
-														self.debugLog("beacon 4 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber4', value=False)
-														self.debugLog("beacon 4 not detected")		
-													if (asset[26]=='1'):
-														y.updateStateOnServer('beaconNumber5', value=True)
-														self.debugLog("beacon 5 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber5', value=False)
-														self.debugLog("beacon 5 not detected")		
-													if (asset[25]=='1'):
-														y.updateStateOnServer('beaconNumber6', value=True)
-														self.debugLog("beacon 6 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber6', value=False)
-														self.debugLog("beacon 6 not detected")		
-													if (asset[24]=='1'):
-														y.updateStateOnServer('beaconNumber7', value=True)
-														self.debugLog("beacon 7 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber7', value=False)
-														self.debugLog("beacon 7 not detected")		
-													if (asset[23]=='1'):
-														y.updateStateOnServer('beaconNumber8', value=True)
-														self.debugLog("beacon 8 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber8', value=False)
-														self.debugLog("beacon 8 not detected")		
-													if (asset[22]=='1'):
-														y.updateStateOnServer('beaconNumber9', value=True)
-														self.debugLog("beacon 9 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber9', value=False)
-														self.debugLog("beacon 9 not detected")		
-													if (asset[21]=='1'):
-														y.updateStateOnServer('beaconNumber10', value=True)
-														self.debugLog("beacon 10 detected")		
-													else:
-														y.updateStateOnServer('beaconNumber10', value=False)
-														self.debugLog("beacon 10 not detected")		
-						
-
+													asset_int = int(asset, 16)
+													for beacon_number in range(0,11):
+														bitmask = 2 ** beacon_number
+														if (asset_int & bitmask == bitmask):
+															indigo.server.log("beacon {} detected".format(beacon_number))
+															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
+														else:
+															self.debugLog("beacon {} not detected".format(beacon_number))
+															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
  				self.sleep(.25) # in seconds
 		except self.StopThread:
 			# do any cleanup here
