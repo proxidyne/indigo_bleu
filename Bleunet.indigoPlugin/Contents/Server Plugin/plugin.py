@@ -30,6 +30,7 @@ class Plugin(indigo.PluginBase):
 		self.triggers=[]
 		self.last=0
 		self.lastasset=""
+		self.missing_assets = []
 	def __del__(self):
 		indigo.PluginBase.__del__(self)
 	######################
@@ -127,17 +128,24 @@ class Plugin(indigo.PluginBase):
 												y.updateStateOnServer('motionDetected', value=True)
 										if (deviceClass == 0x0a):  #beacon detector
 											if group == 0x00:
-												if self.lastasset != asset: 
-													self.lastasset=asset
-													asset_int = int(asset, 16)
-													for beacon_number in range(0,11):
-														bitmask = 2 ** beacon_number
-														if (asset_int & bitmask == bitmask):
-															indigo.server.log("beacon {} detected".format(beacon_number))
+												asset_int = int(asset, 16)
+												for beacon_number in range(0,11):
+													bitmask = 2 ** beacon_number
+													if (asset_int & bitmask == bitmask):
+														if y.states.get("beaconNumber{}".format(beacon_number)) != True:
+															indigo.server.log("found beacon {}".format(beacon_number))
+															self.missing_assets.remove(beacon_number)
 															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
 														else:
-															self.debugLog("beacon {} not detected".format(beacon_number))
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
+															self.debugLog("beacon {} detected".format(beacon_number))
+													else:
+														self.debugLog("beacon {} not detected".format(beacon_number))
+														if beacon_number in self.missing_assets:
+															if y.states.get("beaconNumber{}".format(beacon_number)) != False:
+																indigo.server.log("lost beacon {}".format(beacon_number))
+																y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
+														else:
+															self.missing_assets.append(beacon_number)
  				self.sleep(.25) # in seconds
 		except self.StopThread:
 			# do any cleanup here
