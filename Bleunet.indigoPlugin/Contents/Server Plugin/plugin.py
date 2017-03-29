@@ -96,31 +96,15 @@ class Plugin(indigo.PluginBase):
 								if "NodeID" in y.pluginProps:
 									nodeID=y.pluginProps["NodeID"]
 									if nodeID.lower()==id.lower():
-										if (deviceClass == 0x8):
-											if (state == 0x01):
-												y.updateStateOnServer('buttonOnePressed', value=True)
-												y.updateStateOnServer('buttonOnePressed', value=False)
-											elif (state == 0x11):
-												y.updateStateOnServer('buttonTwoPressed', value=True)
-												y.updateStateOnServer('buttonTwoPressed', value=False)
-											elif (state == 0x21):
-												y.updateStateOnServer('buttonThreePressed', value=True)
-												y.updateStateOnServer('buttonThreePressed', value=False)
-											elif (state == 0x31):
-												y.updateStateOnServer('buttonFourPressed', value=True)
-												y.updateStateOnServer('buttonFourPressed', value=False)
-											if (state == 0x02):
-												y.updateStateOnServer('buttonOneLongPress', value=True)
-												y.updateStateOnServer('buttonOneLongPress', value=False)
-											elif (state == 0x12):
-												y.updateStateOnServer('buttonTwoLongPress', value=True)
-												y.updateStateOnServer('buttonTwoLongPress', value=False)
-											elif (state == 0x22):
-												y.updateStateOnServer('buttonThreeLongPress', value=True)
-												y.updateStateOnServer('buttonThreeLongPress', value=False)
-											elif (state == 0x32):
-												y.updateStateOnServer('buttonFourLongPress', value=True)
-												y.updateStateOnServer('buttonFourLongPress', value=False)
+										if (deviceClass == 0x8):  #button
+											state_options = {'Pressed': {'One': 0x01, 'Two': 0x11, 'Three': 0x21, 'Four': 0x31}, 
+												'LongPress': {'One': 0x02, 'Two': 0x12, 'Three': 0x22, 'Four': 0x32}}
+											for push_type in state_options.keys():
+												for button_number in state_options[push_type].keys():
+													if (state == state_options[push_type][button_number]):
+														state_name = "button{}{}".format(button_number, push_type)
+														y.updateStateOnServer(state_name, value=True)
+														y.updateStateOnServer(state_name, value=False)
 										if (deviceClass == 0x9):  #motion sensor
 											if (state == 0x00):
 												y.updateStateOnServer('motionDetected', value=False)
