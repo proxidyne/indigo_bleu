@@ -29,8 +29,11 @@ class Plugin(indigo.PluginBase):
 		self.debug = False
 		self.triggers=[]
 		self.last=0
-		self.lastasset=""
-		self.missing_assets = []
+		self.last_asset=""
+		self.beacon_range = range(0,11)
+		self.beacon_absence = {}
+		for beacon in self.beacon_range:
+			self.beacon_absence[beacon] = 0
 	def __del__(self):
 		indigo.PluginBase.__del__(self)
 	######################
@@ -112,25 +115,37 @@ class Plugin(indigo.PluginBase):
 												y.updateStateOnServer('motionDetected', value=True)
 										if (deviceClass == 0x0a):  #beacon detector
 											if group == 0x00:
-												asset_int = int(asset, 16)
-												for beacon_number in range(0,11):
-													bitmask = 2 ** beacon_number
-													if (asset_int & bitmask == bitmask):
-														if y.states.get("beaconNumber{}".format(beacon_number)) != True:
-															indigo.server.log("found beacon {}".format(beacon_number))
-															self.missing_assets.remove(beacon_number)
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
+												if asset != self.last_asset:
+													self.last_asset = asset
+													asset_int = int(asset, 16)
+													for beacon_number in self.beacon_range:
+														if bit_present(asset_int, beacon_number):
+															self.beacon_absence[beacon_number] = 0
+															if y.states.get("beaconNumber{}".format(beacon_number)) != True:
+																indigo.server.log("found beacon {}".format(beacon_number))
+																y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
+															else:
+																self.debugLog("beacon {} detected".format(beacon_number))
 														else:
-															self.debugLog("beacon {} detected".format(beacon_number))
-													else:
-														self.debugLog("beacon {} not detected".format(beacon_number))
-														if beacon_number in self.missing_assets:
-															if y.states.get("beaconNumber{}".format(beacon_number)) != False:
-																indigo.server.log("lost beacon {}".format(beacon_number))
-																y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
-														else:
-															self.missing_assets.append(beacon_number)
+															self.debugLog("beacon {} not detected".format(beacon_number))
+															self.beacon_absence[beacon_number] += 1
+												else:
+													beacon_absence_filter = int(y.pluginProps.get("absenceFilter", 3))
+													self.debugLog("Absence filter: {}".format(beacon_absence_filter))
+													for beacon_number in self.beacon_absence.keys():
+														if self.beacon_absence[beacon_number] > 0:
+															if self.beacon_absence[beacon_number] < beacon_absence_filter:
+																self.beacon_absence[beacon_number] += 1
+															elif self.beacon_absence[beacon_number] >= beacon_absence_filter:
+																if y.states.get("beaconNumber{}".format(beacon_number)) != False:
+																	indigo.server.log("lost beacon {}".format(beacon_number))
+																	y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
  				self.sleep(.25) # in seconds
 		except self.StopThread:
 			# do any cleanup here
 			pass
+
+def bit_present(number, bit_position):
+	bitmask = 2 ** bit_position
+	return number & bitmask == bitmask
+
