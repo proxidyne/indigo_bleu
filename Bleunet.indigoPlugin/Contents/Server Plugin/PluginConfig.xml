@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <PluginConfig>
-	<SupportURL>http://wiki.indigodomo.com/doku.php?id=plugins:sql_logger</SupportURL>
+	<SupportURL>http://twocanoes.com/indigo</SupportURL>
 	<Field type="serialport" id="devicePortFieldId" />
+
+  <Field id="beaconAbsenceFilter" type="textfield" defaultValue="40">
+      <Label>Absence filter (seconds):</Label>
+  </Field>
   
   <Field type="checkbox" id="debugEnabled" defaultValue="false">
     <Label>Enable debugging:</Label>
