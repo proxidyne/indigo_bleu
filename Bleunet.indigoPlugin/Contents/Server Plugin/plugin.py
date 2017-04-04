@@ -85,8 +85,9 @@ class Plugin(indigo.PluginBase):
 						seq = int(obj.get("seq","00"),16)
 						state = int(obj.get("state","00"),16)
 						deviceClass=int(obj.get("class","00"),16)
-						asset=obj.get("assetfield","")
-						group=int(obj.get("grpnum","FF"), 16)
+						asset=int(obj.get("assetfield","00"), 16)
+						offset=int(obj.get("offset","FF"), 16)
+						asset = asset + offset
 						self.last = sequences.get(device_id,0)
 						if seq > self.last:
 							sequences[device_id] = seq
@@ -109,21 +110,19 @@ class Plugin(indigo.PluginBase):
 											elif (state == 0x01):
 												y.updateStateOnServer('motionDetected', value=True)
 										if (deviceClass == 0x0a):  #beacon detector
-											if group == 0x00:
-												asset_int = int(asset, 16)
-												for beacon_number in self.beacon_range:
-													beacon_previous_state = y.states.get("beaconNumber{}".format(beacon_number))
-													if bit_present(asset_int, beacon_number):
-														self.debugLog("beacon {} detected".format(beacon_number))
-														self.beacon_last_seen[beacon_number] = time.time()
-														if beacon_previous_state != True:
-															indigo.server.log("found beacon {}".format(beacon_number))
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
-													else:
-														seconds_since_seen = time.time() - self.beacon_last_seen.get(beacon_number, 0)
-														if (seconds_since_seen > self.beacon_absence_filter) and (beacon_previous_state != False):
-															indigo.server.log("lost beacon {}".format(beacon_number))
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
+											for beacon_number in self.beacon_range:
+												beacon_previous_state = y.states.get("beaconNumber{}".format(beacon_number))
+												if bit_present(asset, beacon_number):
+													self.debugLog("beacon {} detected".format(beacon_number))
+													self.beacon_last_seen[beacon_number] = time.time()
+													if beacon_previous_state != True:
+														indigo.server.log("found beacon {}".format(beacon_number))
+														y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
+												else:
+													seconds_since_seen = time.time() - self.beacon_last_seen.get(beacon_number, 0)
+													if (seconds_since_seen > self.beacon_absence_filter) and (beacon_previous_state != False):
+														indigo.server.log("lost beacon {}".format(beacon_number))
+														y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
  				self.sleep(.25) # in seconds
 		except self.StopThread:
 			# do any cleanup here
