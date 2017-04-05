@@ -31,7 +31,7 @@ class Plugin(indigo.PluginBase):
 		self.last=0
 		self.beacon_range = range(0,11)
 		self.beacon_last_seen = {}
-		self.beacon_absence_filter = 40 # seconds
+		self.beacon_absence_filter = 0 # seconds
 	def __del__(self):
 		indigo.PluginBase.__del__(self)
 	######################

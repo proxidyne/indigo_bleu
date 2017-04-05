@@ -3,7 +3,7 @@
 	<SupportURL>http://twocanoes.com/indigo</SupportURL>
 	<Field type="serialport" id="devicePortFieldId" />
 
-  <Field id="beaconAbsenceFilter" type="textfield" defaultValue="40">
+  <Field id="beaconAbsenceFilter" type="textfield" defaultValue="0">
       <Label>Absence filter (seconds):</Label>
   </Field>
   
