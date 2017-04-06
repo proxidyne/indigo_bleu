@@ -29,7 +29,9 @@ class Plugin(indigo.PluginBase):
 		self.debug = False
 		self.triggers=[]
 		self.last=0
-		self.lastasset=""
+		self.beacon_range = range(0,11)
+		self.beacon_last_seen = {}
+		self.beacon_absence_filter = 0 # seconds
 	def __del__(self):
 		indigo.PluginBase.__del__(self)
 	######################
@@ -56,6 +58,8 @@ class Plugin(indigo.PluginBase):
 	def loadPluginPrefs(self):
 		self.debugLog(u"loadpluginPrefs called")	
 		self.debug = self.pluginPrefs.get('debugEnabled',False)
+		self.beacon_absence_filter = format_beacon_absence_filter(self.pluginPrefs.get('beaconAbsenceFilter', '0'))
+		self.debugLog("Beacon absence filter: {} seconds".format(self.beacon_absence_filter))
 
 	def closedPrefsConfigUi ( self, valuesDict, UserCancelled):
 		if UserCancelled is False:
@@ -74,71 +78,61 @@ class Plugin(indigo.PluginBase):
 						self.debugLog("read data from serial: %s" % data.decode('ascii'))
 						try:
 							obj = json.loads(data.decode('ascii'))
-							id = obj.get("id","0")
-							seq = int(obj.get("seq","00"),16)
-							state = int(obj.get("state","00"),16)
-							deviceClass=int(obj.get("class",""),16)
-							asset=obj.get("assetfield","")
-							group=int(obj.get("grpnum","FF"), 16)
-							self.last = sequences.get(id,0)
-						except KeyError as e:
-							self.debugLog('Error retrieving info from JSON object'+ e.errno)
-							seq = 0
 						except ValueError:
 							self.debugLog('Error decoding JSON object')
 							obj = {}
-							seq = 0
-							self.last = 0
+						device_id = obj.get("id","0")
+						seq = int(obj.get("seq","00"),16)
+						state = int(obj.get("state","00"),16)
+						deviceClass=int(obj.get("class","00"),16)
+						asset=int(obj.get("assetfield","00"), 16)
+						offset=int(obj.get("offset","FF"), 16)
+						asset = asset + offset
+						self.last = sequences.get(device_id,0)
 						if seq > self.last:
-							sequences[id] = seq
+							sequences[device_id] = seq
 							for y in indigo.devices.iter("self"):
 								if "NodeID" in y.pluginProps:
 									nodeID=y.pluginProps["NodeID"]
-									if nodeID.lower()==id.lower():
-										if (deviceClass == 0x8):
-											if (state == 0x01):
-												y.updateStateOnServer('buttonOnePressed', value=True)
-												y.updateStateOnServer('buttonOnePressed', value=False)
-											elif (state == 0x11):
-												y.updateStateOnServer('buttonTwoPressed', value=True)
-												y.updateStateOnServer('buttonTwoPressed', value=False)
-											elif (state == 0x21):
-												y.updateStateOnServer('buttonThreePressed', value=True)
-												y.updateStateOnServer('buttonThreePressed', value=False)
-											elif (state == 0x31):
-												y.updateStateOnServer('buttonFourPressed', value=True)
-												y.updateStateOnServer('buttonFourPressed', value=False)
-											if (state == 0x02):
-												y.updateStateOnServer('buttonOneLongPress', value=True)
-												y.updateStateOnServer('buttonOneLongPress', value=False)
-											elif (state == 0x12):
-												y.updateStateOnServer('buttonTwoLongPress', value=True)
-												y.updateStateOnServer('buttonTwoLongPress', value=False)
-											elif (state == 0x22):
-												y.updateStateOnServer('buttonThreeLongPress', value=True)
-												y.updateStateOnServer('buttonThreeLongPress', value=False)
-											elif (state == 0x32):
-												y.updateStateOnServer('buttonFourLongPress', value=True)
-												y.updateStateOnServer('buttonFourLongPress', value=False)
+									if nodeID.lower() == device_id.lower():
+										if (deviceClass == 0x8):  #button
+											state_options = {'Pressed': {'One': 0x01, 'Two': 0x11, 'Three': 0x21, 'Four': 0x31}, 
+												'LongPress': {'One': 0x02, 'Two': 0x12, 'Three': 0x22, 'Four': 0x32}}
+											for push_type in state_options.keys():
+												for button_number in state_options[push_type].keys():
+													if (state == state_options[push_type][button_number]):
+														state_name = "button{}{}".format(button_number, push_type)
+														y.updateStateOnServer(state_name, value=True)
+														y.updateStateOnServer(state_name, value=False)
 										if (deviceClass == 0x9):  #motion sensor
 											if (state == 0x00):
 												y.updateStateOnServer('motionDetected', value=False)
 											elif (state == 0x01):
 												y.updateStateOnServer('motionDetected', value=True)
 										if (deviceClass == 0x0a):  #beacon detector
-											if group == 0x00:
-												if self.lastasset != asset: 
-													self.lastasset=asset
-													asset_int = int(asset, 16)
-													for beacon_number in range(0,11):
-														bitmask = 2 ** beacon_number
-														if (asset_int & bitmask == bitmask):
-															indigo.server.log("beacon {} detected".format(beacon_number))
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
-														else:
-															self.debugLog("beacon {} not detected".format(beacon_number))
-															y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
+											for beacon_number in self.beacon_range:
+												beacon_previous_state = y.states.get("beaconNumber{}".format(beacon_number))
+												if bit_present(asset, beacon_number):
+													self.debugLog("beacon {} detected".format(beacon_number))
+													self.beacon_last_seen[beacon_number] = time.time()
+													if beacon_previous_state != True:
+														indigo.server.log("found beacon {}".format(beacon_number))
+														y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=True)
+												else:
+													seconds_since_seen = time.time() - self.beacon_last_seen.get(beacon_number, 0)
+													if (seconds_since_seen > self.beacon_absence_filter) and (beacon_previous_state != False):
+														indigo.server.log("lost beacon {}".format(beacon_number))
+														y.updateStateOnServer("beaconNumber{}".format(beacon_number), value=False)
  				self.sleep(.25) # in seconds
 		except self.StopThread:
 			# do any cleanup here
 			pass
+
+def bit_present(number, bit_position):
+	bitmask = 2 ** bit_position
+	return number & bitmask == bitmask
+
+def format_beacon_absence_filter(value):
+	if (not value.isdigit()) or (int(value) < 0):
+		value = 0
+	return int(value)
