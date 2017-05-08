@@ -73,6 +73,7 @@ class Plugin(indigo.PluginBase):
 			while True:
 			# Do your stuff here
 				if (serial.inWaiting()>0):
+					#read from serial port and strip nulls
 					data = serial.readline().translate(None, b'\x00')
 					if data:
 						self.debugLog("read data from serial: %s" % data.decode('ascii'))
